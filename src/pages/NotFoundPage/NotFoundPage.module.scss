@@ -1,4 +1,41 @@
 @import '../../styles/variables.scss';
 
-.notFoundPage {
+.notFound {
+  @include flex-column-center-center;
+  color: $brown;
+
+  a {
+    color: $brown;
+  }
+
+  h4 {
+    margin-bottom: 20px;
+  }
+  .imgContainer {
+    height: auto;
+    max-width: 800px;
+    width: 100%;
+
+    img {
+      width: 100%;
+    }
+  }
+}
+
+.link {
+  color: #000;
+  font-weight: 700;
+  transition: 0.3s;
+
+  &:hover {
+    color: $green;
+  }
+}
+
+@media (max-width: 560px) {
+  .notFound {
+    h3 {
+      @include text36;
+    }
+  }
 }
