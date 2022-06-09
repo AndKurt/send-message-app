@@ -1,18 +1,28 @@
 import React, { useState } from 'react';
 import { Box, Button, Container, TextField } from '@mui/material';
 import { AutocompleteUserForm } from '..';
-import { IUserData } from '../../interfaces';
+import { IUser } from '../../interfaces';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { sendPostsAsync } from '../../redux/actions/postsActions';
 
 export const SendMessageForm = () => {
   const [title, setTitle] = useState('');
-  const [recipient, setRecipient] = useState<IUserData | null>(null);
+  const [recipient, setRecipient] = useState<IUser | null>(null);
   const [message, setMessage] = useState('');
+  const dispatch = useAppDispatch();
+  const { name } = useAppSelector((state) => state.userReducer);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log(title, recipient?.recepient, message);
-
+    console.log(title, recipient?.name, message);
+    const data = {
+      title: title,
+      recepient: recipient?.name as string,
+      sender: name,
+      message: message,
+    };
+    dispatch(sendPostsAsync({ data }));
     setMessage('');
     setRecipient(null);
     setTitle('');
@@ -43,7 +53,7 @@ export const SendMessageForm = () => {
           />
           <AutocompleteUserForm
             recipient={recipient}
-            setRecipient={(recipient: IUserData | null) => setRecipient(recipient)}
+            setRecipient={(recipient: IUser | null) => setRecipient(recipient)}
           />
           <TextField
             margin="normal"

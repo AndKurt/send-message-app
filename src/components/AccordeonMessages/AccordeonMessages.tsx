@@ -1,11 +1,19 @@
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import styles from './AccordeonMessages.module.scss';
-import { MOCK_DATA } from '../mock';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { getPostsAsync } from '../../redux/actions/postsActions';
 
 export const AccordeonMessages = () => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
+  const dispatch = useAppDispatch();
+  const { posts } = useAppSelector((state) => state.postsRedicer);
+  const { name } = useAppSelector((state) => state.userReducer);
+
+  useEffect(() => {
+    dispatch(getPostsAsync(name));
+  }, []);
 
   const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
@@ -14,25 +22,25 @@ export const AccordeonMessages = () => {
   return (
     <div className={styles.AccordeonMessages}>
       <Typography component="h3" variant="h5" sx={{ textAlign: 'center', marginBottom: '5px' }}>
-        Received messages:
+        {posts.length > 0 ? 'Received messages:' : 'No message to read'}
       </Typography>
-      {MOCK_DATA &&
-        MOCK_DATA.map((user) => {
+      {posts.length > 0 &&
+        posts.map((user) => {
           return (
             <Accordion
-              key={user._id}
-              expanded={expanded === user._id}
-              onChange={handleChange(user._id)}
+              key={user.id}
+              expanded={expanded === user.id}
+              onChange={handleChange(user.id)}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography sx={{ width: '20%', flexShrink: 0 }}>
+                <Typography component="div" sx={{ width: '20%', flexShrink: 0 }}>
                   <Typography fontSize={12} sx={{ color: 'text.secondary' }}>
                     From:
                   </Typography>
                   {user.sender}
                 </Typography>
                 {/*<Typography sx={{ color: 'text.secondary', width: '33%' }}>Date</Typography>*/}
-                <Typography>
+                <Typography component="div">
                   <Typography fontSize={12} sx={{ color: 'text.secondary' }}>
                     Title:
                   </Typography>
@@ -40,7 +48,7 @@ export const AccordeonMessages = () => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography>
+                <Typography component="div">
                   <Typography fontSize={12} sx={{ color: 'text.secondary' }}>
                     Message:
                   </Typography>

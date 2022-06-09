@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { Avatar, Box, Button, Container, TextField, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useAppDispatch } from '../../redux/hooks';
+import { loginUserAsync } from '../../redux/actions/userAction';
 
 export const LoginForm = () => {
   const [name, setName] = useState('');
+  const dispatch = useAppDispatch();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    console.log({
-      name: data.get('name'),
-    });
-    console.log(name);
-
+    dispatch(loginUserAsync(name));
     setName('');
   };
 
