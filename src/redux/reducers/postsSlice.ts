@@ -17,7 +17,11 @@ const initialState: IPostsSlice = {
 export const postsSlice = createSlice({
   name: 'posts',
   initialState,
-  reducers: {},
+  reducers: {
+    addNewPostToList(state, action: PayloadAction<IUserData>) {
+      state.posts = [...state.posts, action.payload];
+    },
+  },
   extraReducers: {
     [getPostsAsync.pending.type]: (state) => {
       state.isLoading = true;
@@ -26,6 +30,7 @@ export const postsSlice = createSlice({
     },
     [getPostsAsync.fulfilled.type]: (state, action: PayloadAction<IUserData[]>) => {
       state.isLoading = false;
+
       state.posts = action.payload;
       state.error = '';
     },

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Container, TextField } from '@mui/material';
 import { AutocompleteUserForm } from '..';
 import { IUser } from '../../interfaces';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { sendPostsAsync } from '../../redux/actions/postsActions';
+import socket from '../../socket';
+import { postsActions } from '../../redux/reducers/postsSlice';
 
 export const SendMessageForm = () => {
   const [title, setTitle] = useState('');
@@ -11,22 +13,49 @@ export const SendMessageForm = () => {
   const [message, setMessage] = useState('');
   const dispatch = useAppDispatch();
   const { name } = useAppSelector((state) => state.userReducer);
+  const [arrivalMessage, setArrivalMessage] = useState(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log(title, recipient?.name, message);
     const data = {
       title: title,
       recepient: recipient?.name as string,
       sender: name,
       message: message,
     };
+
+    if (recipient?.name === name) {
+      dispatch(
+        postsActions.addNewPostToList({
+          title: data.title,
+          recepient: data.recepient,
+          sender: data.sender,
+          message: data.message,
+        })
+      );
+    }
+
+    socket.emit('send-msg', data);
+
     dispatch(sendPostsAsync({ data }));
     setMessage('');
     setRecipient(null);
     setTitle('');
   };
+
+  useEffect(() => {
+    socket.on('msg-recieve', (msg) => {
+      dispatch(
+        postsActions.addNewPostToList({
+          title: msg.data.title,
+          recepient: msg.data.recepient,
+          sender: msg.data.sender,
+          message: msg.data.message,
+        })
+      );
+    });
+  }, []);
 
   return (
     <Container component="div" maxWidth="xs" sx={{ boxShadow: 3, marginBottom: '30px' }}>

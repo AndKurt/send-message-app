@@ -5,7 +5,7 @@ export interface ISendPost {
   message: string;
 }
 export interface IUserData extends ISendPost {
-  id: string;
+  id?: string;
 }
 
 export interface IUser {

@@ -25,12 +25,12 @@ export const AccordeonMessages = () => {
         {posts.length > 0 ? 'Received messages:' : 'No message to read'}
       </Typography>
       {posts.length > 0 &&
-        posts.map((user) => {
+        posts.map((user, index) => {
           return (
             <Accordion
-              key={user.id}
+              key={`${user.title}-${user.message}-${index}`}
               expanded={expanded === user.id}
-              onChange={handleChange(user.id)}
+              onChange={handleChange(user.id as string)}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography component="div" sx={{ width: '20%', flexShrink: 0 }}>
