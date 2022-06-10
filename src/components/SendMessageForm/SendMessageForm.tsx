@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Container, TextField } from '@mui/material';
 import { AutocompleteUserForm } from '..';
-import { IUser } from '../../interfaces';
+import { ISendPost, IUser } from '../../interfaces';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { sendPostsAsync } from '../../redux/actions/postsActions';
 import socket from '../../socket';
@@ -36,6 +36,10 @@ export const SendMessageForm = () => {
           message: data.message,
         })
       );
+      dispatch(isNewPost(true));
+      setTimeout(() => {
+        dispatch(isNewPost(false));
+      }, 3000);
     }
 
     socket.emit('send-msg', data);
