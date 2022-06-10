@@ -15,6 +15,7 @@ export const SendMessageForm = () => {
   const dispatch = useAppDispatch();
   const { name } = useAppSelector((state) => state.userReducer);
   const { error } = useAppSelector((state) => state.postsRedicer);
+  const { isNewPost } = postsActions;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,8 +50,6 @@ export const SendMessageForm = () => {
 
   useEffect(() => {
     socket.on('msg-recieve', (msg) => {
-      console.log(msg);
-
       dispatch(
         postsActions.addNewPostToList({
           title: msg.data.title,
@@ -59,6 +58,10 @@ export const SendMessageForm = () => {
           message: msg.data.message,
         })
       );
+      dispatch(isNewPost(true));
+      setTimeout(() => {
+        dispatch(isNewPost(false));
+      }, 3000);
     });
   }, []);
 

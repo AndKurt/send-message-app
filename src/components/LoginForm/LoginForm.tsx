@@ -3,25 +3,17 @@ import { Avatar, Box, Button, Container, TextField, Typography } from '@mui/mate
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useAppDispatch } from '../../redux/hooks';
 import { loginUserAsync } from '../../redux/actions/userAction';
-//import io from 'socket.io-client';
 import socket from '../../socket';
-
-//const socket = io('http://localhost:5000');
 
 export const LoginForm = () => {
   const [name, setName] = useState('');
   const dispatch = useAppDispatch();
-  //const connectionSocket = () => {
-  //  io('http://localhost:5000');
-  //};
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(loginUserAsync(name));
     socket.emit('add-user', name);
     setName('');
-
-    //connectionSocket();
   };
 
   return (

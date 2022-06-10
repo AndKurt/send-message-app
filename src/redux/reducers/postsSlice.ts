@@ -6,12 +6,16 @@ interface IPostsSlice {
   isLoading: boolean;
   error: string;
   posts: IUserData[];
+  isNewPost: boolean;
+  newPost: IUserData | null;
 }
 
 const initialState: IPostsSlice = {
   isLoading: false,
   error: '',
   posts: [],
+  isNewPost: false,
+  newPost: null,
 };
 
 export const postsSlice = createSlice({
@@ -20,6 +24,10 @@ export const postsSlice = createSlice({
   reducers: {
     addNewPostToList(state, action: PayloadAction<IUserData>) {
       state.posts = [...state.posts, action.payload];
+      state.newPost = action.payload;
+    },
+    isNewPost(state, action: PayloadAction<boolean>) {
+      state.isNewPost = action.payload;
     },
   },
   extraReducers: {

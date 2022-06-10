@@ -1,0 +1,48 @@
+@import '../../styles/variables.scss';
+
+.newPost {
+  visibility: hidden;
+  width: 450px;
+  margin-left: -125px;
+  background-color: $white;
+  color: $brown;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 150px;
+  top: 100px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.active {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 5s;
+}
+
+@keyframes fadein {
+  from {
+    left: 0;
+    opacity: 0;
+  }
+  to {
+    left: 150px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    left: 150px;
+    opacity: 1;
+  }
+  to {
+    left: 0;
+    opacity: 0;
+  }
+}
+
+.bold {
+  font-weight: bold;
+}
