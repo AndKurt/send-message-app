@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { sendPostsAsync } from '../../redux/actions/postsActions';
 import socket from '../../socket';
 import { postsActions } from '../../redux/reducers/postsSlice';
+import styles from './SendMessageForm.module.scss';
 
 export const SendMessageForm = () => {
   const [title, setTitle] = useState('');
@@ -13,7 +14,7 @@ export const SendMessageForm = () => {
   const [message, setMessage] = useState('');
   const dispatch = useAppDispatch();
   const { name } = useAppSelector((state) => state.userReducer);
-  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const { error } = useAppSelector((state) => state.postsRedicer);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,13 +40,17 @@ export const SendMessageForm = () => {
     socket.emit('send-msg', data);
 
     dispatch(sendPostsAsync({ data }));
-    setMessage('');
-    setRecipient(null);
-    setTitle('');
+    if (data.title && data.recepient && data.message) {
+      setMessage('');
+      setRecipient(null);
+      setTitle('');
+    }
   };
 
   useEffect(() => {
     socket.on('msg-recieve', (msg) => {
+      console.log(msg);
+
       dispatch(
         postsActions.addNewPostToList({
           title: msg.data.title,
@@ -103,6 +108,7 @@ export const SendMessageForm = () => {
           </Button>
         </Box>
       </Box>
+      {error && <p className={styles.error}>All fields must be filled</p>}
     </Container>
   );
 };
